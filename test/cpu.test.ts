@@ -1,9 +1,13 @@
-// import { Cpu } from "../src/cpu";
+import assert from 'assert';
+import {Cpu} from '../src/cpu.js'
 
-// test('cpu intialises fields correctly', () => {
+describe('CPU', () => {
 
-//     let cpu = new Cpu();
-
-//     expect(cpu.memory.length).toBe(4096);
-
-// });
+    it('should initialise registers', () => {
+        let cpu = new Cpu();
+    
+        assert.strictEqual(0x200, cpu.pc);
+        assert.strictEqual(4096, cpu.memory.length);
+    });
+    
+});
