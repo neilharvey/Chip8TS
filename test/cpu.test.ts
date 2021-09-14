@@ -1,9 +1,9 @@
-import { Cpu } from "../src/cpu";
+// import { Cpu } from "../src/cpu";
 
-test('cpu intialises fields correctly', () => {
+// test('cpu intialises fields correctly', () => {
 
-    let cpu = new Cpu();
+//     let cpu = new Cpu();
 
-    expect(cpu.memory.length).toBe(4096);
+//     expect(cpu.memory.length).toBe(4096);
 
-});
+// });
