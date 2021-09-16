@@ -1,0 +1,10 @@
+body {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.850rem;
+    /* background-color: #000;
+    color: lime; */
+}
+
+#display {
+    border:1px solid rgb(222, 226, 230)
+}
