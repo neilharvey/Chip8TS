@@ -19,7 +19,6 @@ function loadRom(name:string) {
     };
     
     request.send(null);
-
 }
 
 loadRom("IBM Logo");

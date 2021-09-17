@@ -1,4 +1,5 @@
 import { Cpu } from "./cpu.js";
+import { Opcode } from "./opcode.js"
 
 class Debugger {
 
@@ -9,7 +10,7 @@ class Debugger {
         for (var i = 0; i < 8; i++) {
 
             var addr = (cpu.pc + (2 * i));
-            var opcode = `${cpu.memory[addr]} ${cpu.memory[addr + 1]}`;
+            var opcode = new Opcode(cpu.memory[addr], cpu.memory[addr + 1]);
             var instruction = this.getInstruction(opcode);
             // this.bindRegister(addr, opcode, instruction, `m${i}`)
         }
@@ -27,8 +28,11 @@ class Debugger {
 
     }
 
-    private getInstruction(opcode:string):string {
-        return ""
+    private getInstruction(opcode:Opcode):string {
+        switch(opcode.value & 0xF000)
+        {
+            default:
+                return "???";
+        }
     }
-
 }
