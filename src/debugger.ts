@@ -1,9 +1,9 @@
 import { Cpu } from "./cpu.js";
 import { Opcode } from "./opcode.js"
 
-class Debugger {
+export abstract class Debugger {
 
-    bind(cpu: Cpu) {
+    static bind(cpu: Cpu) {
 
         this.bindRegister(cpu.pc, "pc");
 
@@ -11,26 +11,38 @@ class Debugger {
 
             var addr = (cpu.pc + (2 * i));
             var opcode = new Opcode(cpu.memory[addr], cpu.memory[addr + 1]);
-            var instruction = this.getInstruction(opcode);
-            // this.bindRegister(addr, opcode, instruction, `m${i}`)
+            this.bindMemory(addr, opcode, `m${i}`);
         }
 
     }
 
-    private bindRegister(value: any, id: string) {
+    private static bindRegister(value: number, id: string) {
         var element = document.getElementById(id);
         if (element != null) {
-            element.innerText = value;
+            element.innerText = `0x${value.toString(16)}`;
         }
     }
 
-    private bindMemory(addr: number, opcode: string, instruction: string, id: string) {
+    private static bindMemory(addr: number, opcode: Opcode, id: string) {
+
+        var instruction = this.getInstruction(opcode);
+        var row = <HTMLTableRowElement>document.getElementById(id);
+
+        console.log({
+            row:row,
+            addr:addr,
+            opcode:opcode,
+            instruction:instruction
+        });
+
+        row.cells[0].innerText = `0x${addr.toString(16)}`;
+        row.cells[1].innerText = `0x${addr.toString(16)}`;
+        row.cells[2].innerText = instruction;
 
     }
 
-    private getInstruction(opcode:Opcode):string {
-        switch(opcode.value & 0xF000)
-        {
+    private static getInstruction(opcode: Opcode): string {
+        switch (opcode.value & 0xF000) {
             default:
                 return "???";
         }
