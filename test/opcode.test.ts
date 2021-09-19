@@ -66,8 +66,8 @@ describe('Opcode', () => {
         it('0x00E0 is CLS', () => assertOpcodeInstruction(0x00E0, 'CLS'));
         it('0x00EE is RET', () => assertOpcodeInstruction(0x00EE, 'RET'));
         it('0x1nnn is JP nnn', () => assertOpcodeInstruction(0x122A, 'JP 22a'));
-        it('0x6xkk is LD Vx, kk', () => assertOpcodeInstruction(0x600C, 'LD V0, c'));
-        it('0x7xkk is ADD Vx, kk', () => assertOpcodeInstruction(0x7009, 'ADD V0, 9'));
+        it('0x6xkk is LD Vx, kk', () => assertOpcodeInstruction(0x600C, 'LD V0, 0c'));
+        it('0x7xkk is ADD Vx, kk', () => assertOpcodeInstruction(0x7009, 'ADD V0, 09'));
         it('0xAnnn is LD I, nnn', () => assertOpcodeInstruction(0xA22A, 'LD I, 22a'));
         it('0xDxyn is DRW Vx, Vy, n', () => assertOpcodeInstruction(0xD01F, 'DRW V0, V1, f'));
 

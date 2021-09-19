@@ -1,3 +1,5 @@
+import './hex.js';
+
 export class Opcode {
 
     value: number;
@@ -30,15 +32,15 @@ export class Opcode {
                     return "";
                 }
             case 0x1000:
-                return `JP ${this.nnn.toString(16)}`;
+                return `JP ${this.nnn.toHex(3)}`;
             case 0x6000:
-                return `LD V${this.x}, ${this.kk.toString(16)}`;
+                return `LD V${this.x}, ${this.kk.toHex(2)}`;
             case 0x7000:
-                return `ADD V${this.x}, ${this.kk.toString(16)}`;
+                return `ADD V${this.x}, ${this.kk.toHex(2)}`;
             case 0xA000:
-                return `LD I, ${this.nnn.toString(16)}`;
+                return `LD I, ${this.nnn.toHex(3)}`;
             case 0xD000:
-                return `DRW V${this.x}, V${this.y}, ${this.n.toString(16)}`;
+                return `DRW V${this.x}, V${this.y}, ${this.n.toHex(1)}`;
         }
 
         return "Unknown";
