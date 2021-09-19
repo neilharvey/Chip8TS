@@ -8,7 +8,6 @@ export abstract class Debugger {
         this.bindRegister(cpu.pc, "pc");
 
         for (var i = 0; i < 8; i++) {
-
             var addr = (cpu.pc + (2 * i));
             var opcode = new Opcode(cpu.memory[addr], cpu.memory[addr + 1]);
             this.bindMemory(addr, opcode, `m${i}`);
@@ -25,26 +24,10 @@ export abstract class Debugger {
 
     private static bindMemory(addr: number, opcode: Opcode, id: string) {
 
-        var instruction = this.getInstruction(opcode);
         var row = <HTMLTableRowElement>document.getElementById(id);
-
-        console.log({
-            row:row,
-            addr:addr,
-            opcode:opcode,
-            instruction:instruction
-        });
-
         row.cells[0].innerText = `0x${addr.toString(16)}`;
-        row.cells[1].innerText = `0x${addr.toString(16)}`;
-        row.cells[2].innerText = instruction;
+        row.cells[1].innerText = opcode.value.toString(16);
+        row.cells[2].innerText = opcode.instruction();
 
-    }
-
-    private static getInstruction(opcode: Opcode): string {
-        switch (opcode.value & 0xF000) {
-            default:
-                return "???";
-        }
     }
 }

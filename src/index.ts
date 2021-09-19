@@ -16,6 +16,7 @@ function loadRom(name: string) {
     if (arrayBuffer) {
       var byteArray = new Uint8Array(arrayBuffer);
       cpu.loadRom(byteArray);
+      Debugger.bind(cpu);
     }
   };
 
@@ -23,4 +24,3 @@ function loadRom(name: string) {
 }
 
 loadRom("IBM Logo");
-Debugger.bind(cpu);
