@@ -37,6 +37,8 @@ export class Opcode {
                 return `ADD V${this.x}, ${this.kk.toString(16)}`;
             case 0xA000:
                 return `LD I, ${this.nnn.toString(16)}`;
+            case 0xD000:
+                return `DRW V${this.x}, V${this.y}, ${this.n.toString(16)}`;
         }
 
         return "Unknown";
