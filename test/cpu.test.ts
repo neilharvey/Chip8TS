@@ -41,4 +41,45 @@ describe('CPU', () => {
         });
     })
 
+    describe('#tick()', () => {
+
+        // decrements delay when non zero
+
+        // decrements sound when non zero and plays sound
+
+    });
+
+    describe("#cls()", () => {
+
+        it("clears screen", () => {
+
+        })
+
+    });
+
+    describe("#ret()", () => {
+
+    });
+
+    describe("#jp(nnn)", () => {
+
+
+    });
+
+    describe("#ld_v(x,kk)",() => {
+
+    });
+
+    describe("#ld_i(nnn)", () => {
+
+    });
+
+    describe("#add_v(x,kk)",() => {
+
+    });
+
+    describe("#drw(x,y,n)", () => {
+
+    });
+
 });
