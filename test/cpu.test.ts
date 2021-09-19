@@ -22,7 +22,7 @@ describe('CPU', () => {
 
             cpu.loadRom(rom);
 
-            for(var i=0; i<rom.length; i++) {
+            for (var i = 0; i < rom.length; i++) {
                 assert.strictEqual(rom[i], cpu.memory[0x200 + i]);
             }
 
@@ -43,43 +43,128 @@ describe('CPU', () => {
 
     describe('#tick()', () => {
 
-        // decrements delay when non zero
+        it("fetches and executes next opcode", () => {
 
-        // decrements sound when non zero and plays sound
+            let cpu = new Cpu();
+
+            // CLS
+            cpu.memory[0x200] = 0x00;
+            cpu.memory[0x201] = 0xE0;
+            cpu.display[0][0] = true;
+
+            cpu.tick();
+
+            assert.strictEqual(0x202, cpu.pc);
+            assert.strictEqual(false, cpu.display[0][0]);
+        });
+
+        it("decrements delay timer", () => {
+
+            let cpu = new Cpu();
+            cpu.delay = 10;
+
+            cpu.tick();
+
+            assert.strictEqual(9, cpu.delay);
+
+        });
+
+        it("decrements sound timer", () => {
+
+            let cpu = new Cpu();
+            cpu.sound = 5;
+
+            cpu.tick();
+
+            assert.strictEqual(4, cpu.sound);
+
+        });
 
     });
 
-    describe("#cls()", () => {
+    describe('#reset()', () => {
+        it("clears all registers and memory", () => {
 
-        it("clears screen", () => {
+            let cpu = new Cpu();
+            cpu.pc = 0x300;
+            cpu.v[0] = 1;
+            cpu.memory[0x0]
+            cpu.display[0][0] = true;
+
+            cpu.reset();
+
+            assert.strictEqual(0x200, cpu.pc);
+            assert.strictEqual(0, cpu.v[0]);
+            assert.strictEqual(false, cpu.display[0][0]);
 
         })
+    })
 
-    });
+    //describe("instructions", () => {
 
-    describe("#ret()", () => {
+        describe("#cls()", () => {
+            it("clears the display", () => {
 
-    });
+                let cpu = new Cpu();
 
-    describe("#jp(nnn)", () => {
+                cpu.display[0][0] = true;
+                cpu.display[63][31] = true;
 
+                cpu.cls();
 
-    });
+                assert.strictEqual(false, cpu.display[0][0]);
+                assert.strictEqual(false, cpu.display[63][31]);
 
-    describe("#ld_v(x,kk)",() => {
+            })
+        });
 
-    });
+        describe("#jp(nnn)", () => {
+            it("sets pc to nnn", () => {
 
-    describe("#ld_i(nnn)", () => {
+                let cpu = new Cpu();
 
-    });
+                cpu.jp(0x400);
 
-    describe("#add_v(x,kk)",() => {
+                assert.strictEqual(0x400, cpu.pc);
 
-    });
+            });
+        });
 
-    describe("#drw(x,y,n)", () => {
+        describe("#ret()", () => {
 
-    });
+        });
+
+        describe("#ld_v(x,kk)", () => {
+            it("sets v[x] to kk", () => {
+
+                let cpu = new Cpu();
+
+                cpu.ld_v(8, 0x99);
+
+                assert.strictEqual(0x99, cpu.v[8]);
+
+            });
+        });
+
+        describe("#ld_i(nnn)", () => {
+            it("sets i to nnn", () => {
+
+                let cpu  = new Cpu();
+
+                cpu.ld_i(0x456);
+
+                assert.strictEqual(0x456, cpu.i);
+            })
+        });
+
+        describe("#add_v(x,kk)", () => {
+
+        });
+
+        describe("#drw(x,y,n)", () => {
+
+        });
+
+    //});
 
 });

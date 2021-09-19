@@ -1,6 +1,7 @@
 import { Cpu } from "./cpu.js";
 import { Debugger } from "./debugger.js";
 
+
 let cpu = new Cpu();
 
 function loadRom(name: string) {
@@ -22,5 +23,11 @@ function loadRom(name: string) {
 
   request.send(null);
 }
+
+let stepButton = document.getElementById("btn-step");
+stepButton?.addEventListener("click", () => {
+  cpu.tick();
+  Debugger.bind(cpu);  
+});
 
 loadRom("IBM Logo");
