@@ -4,7 +4,7 @@ export class Cpu {
 
     memory: Uint8Array = new Uint8Array(4096);
     pc: number = 0x200;
-    i:number = 0;
+    i: number = 0;
     v: Uint8Array = new Uint8Array(8);
     sp: number = 0;
     s: Uint16Array = new Uint16Array(16);
@@ -39,7 +39,7 @@ export class Cpu {
 
         for (let x = 0; x < 64; x++) {
             this.display[x] = [];
-            for(let y = 0; y< 32; y++) {
+            for (let y = 0; y < 32; y++) {
                 this.display[x][y] = false;
             }
         }
@@ -92,7 +92,7 @@ export class Cpu {
     cls() {
 
         for (let x = 0; x < 64; x++) {
-            for(let y = 0; y< 32; y++) {
+            for (let y = 0; y < 32; y++) {
                 this.display[x][y] = false;
             }
         }
@@ -102,17 +102,49 @@ export class Cpu {
 
     ret() {
 
+        this.sp--;
+        this.pc = this.s[this.sp];
+
     }
 
     jp(nnn: number) {
         this.pc = nnn;
-    } 
+    }
 
     add_v(x: number, kk: number) {
         this.v[x] += kk;
     }
 
     drw(x: number, y: number, n: number) {
+
+        let vx = this.v[x];
+        let vy = this.v[y];
+        this.v[0xF] = 0;
+
+        for (var row = 0; row < n; row++) {
+
+            var sprite = this.memory[this.i + row];
+
+            for (var col = 0; col < 8; col++) {
+
+                let px = (vx + col) % 64;
+                let py = (vy + row) % 32;
+
+                // Each bit in the sprite byte represents a pixel we want to render. 
+                // We need to XOR the sprite pixel with the display pixel to 
+                // determine the final value.
+                let spritePixel = (sprite >> (7 - col)) & 1;
+                let oldPixel = this.display[px][py] ? 1 : 0;
+                let newPixel = oldPixel ^ spritePixel;
+
+                this.display[px][py] = newPixel != 0;
+
+                // When both pixels are true store the collision in V[F]
+                if (oldPixel == 1 && spritePixel == 1) {
+                    this.v[0xF] = 1;
+                }
+            }
+        }
     }
 
     ld_i(nnn: number) {

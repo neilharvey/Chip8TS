@@ -131,7 +131,21 @@ describe('CPU', () => {
         });
 
         describe("#ret()", () => {
+            it("pops stack and sets to pc", () => {
+                
+                let cpu = new Cpu();
 
+                // CALL 0x400
+                cpu.s[0] = 0x200;
+                cpu.sp = 1;
+                cpu.pc = 0x400;
+
+                cpu.ret();
+
+                assert.strictEqual(0x200, cpu.pc);
+                assert.strictEqual(0, cpu.sp);
+                
+            });
         });
 
         describe("#ld_v(x,kk)", () => {
@@ -158,7 +172,15 @@ describe('CPU', () => {
         });
 
         describe("#add_v(x,kk)", () => {
+            it("adds kk to v[x]", () => {
 
+                let cpu = new Cpu();
+                cpu.v[0] = 0x01;
+
+                cpu.add_v(0, 0x01);
+
+                assert.strictEqual(0x02, cpu.v[0]);
+            });
         });
 
         describe("#drw(x,y,n)", () => {
