@@ -1,8 +1,20 @@
+import { NullAudio } from "./audio.js";
 import { Cpu } from "./cpu.js";
 import { Debugger } from "./debugger.js";
+import { CanvasDisplay } from "./display.js";
 
+let display = new CanvasDisplay("display");
+let audio = new NullAudio();
+let cpu = new Cpu(display, audio);
 
-let cpu = new Cpu();
+function run() {
+
+  setInterval(() => {
+    cpu.tick();
+    Debugger.bind(cpu);
+  }, 10);
+
+}
 
 function loadRom(name: string) {
 
@@ -17,7 +29,7 @@ function loadRom(name: string) {
     if (arrayBuffer) {
       var byteArray = new Uint8Array(arrayBuffer);
       cpu.loadRom(byteArray);
-      Debugger.bind(cpu);
+      run();
     }
   };
 
@@ -27,7 +39,7 @@ function loadRom(name: string) {
 let stepButton = document.getElementById("btn-step");
 stepButton?.addEventListener("click", () => {
   cpu.tick();
-  Debugger.bind(cpu);  
+  Debugger.bind(cpu);
 });
 
 loadRom("IBM Logo");

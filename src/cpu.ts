@@ -1,6 +1,11 @@
 import { Opcode } from './opcode.js';
+import { Audio, NullAudio } from './audio.js';
+import { Display, NullDisplay } from './display.js';
 
 export class Cpu {
+
+    readonly display: Display;
+    readonly audio: Audio;
 
     memory: Uint8Array = new Uint8Array(4096);
     pc: number = 0x200;
@@ -10,12 +15,13 @@ export class Cpu {
     s: Uint16Array = new Uint16Array(16);
     delay: number = 0;
     sound: number = 0;
-    display: boolean[][] = [];
+    screen: boolean[][] = [];
 
-    constructor() {
+    constructor(display: Display = new NullDisplay(), audio: Audio = new NullAudio()) {
+        this.display = display;
+        this.audio = audio;
         this.reset();
     }
-
 
     loadRom(rom: Uint8Array) {
         this.reset();
@@ -35,12 +41,12 @@ export class Cpu {
         this.sound = 0;
         this.loadFontset();
 
-        this.display = [];
+        this.screen = [];
 
         for (let x = 0; x < 64; x++) {
-            this.display[x] = [];
+            this.screen[x] = [];
             for (let y = 0; y < 32; y++) {
-                this.display[x][y] = false;
+                this.screen[x][y] = false;
             }
         }
 
@@ -93,18 +99,16 @@ export class Cpu {
 
         for (let x = 0; x < 64; x++) {
             for (let y = 0; y < 32; y++) {
-                this.display[x][y] = false;
+                this.screen[x][y] = false;
             }
         }
 
-        // redraw
+        this.display.render(this.screen);
     }
 
     ret() {
-
         this.sp--;
         this.pc = this.s[this.sp];
-
     }
 
     jp(nnn: number) {
@@ -134,10 +138,10 @@ export class Cpu {
                 // We need to XOR the sprite pixel with the display pixel to 
                 // determine the final value.
                 let spritePixel = (sprite >> (7 - col)) & 1;
-                let oldPixel = this.display[px][py] ? 1 : 0;
+                let oldPixel = this.screen[px][py] ? 1 : 0;
                 let newPixel = oldPixel ^ spritePixel;
 
-                this.display[px][py] = newPixel != 0;
+                this.screen[px][py] = newPixel != 0;
 
                 // When both pixels are true store the collision in V[F]
                 if (oldPixel == 1 && spritePixel == 1) {
@@ -145,6 +149,8 @@ export class Cpu {
                 }
             }
         }
+
+        this.display.render(this.screen);
     }
 
     ld_i(nnn: number) {

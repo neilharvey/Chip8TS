@@ -43,6 +43,6 @@ export class Opcode {
                 return `DRW V${this.x}, V${this.y}, ${this.n.toHex(1)}`;
         }
 
-        return "Unknown";
+        return "";
     }
 }
