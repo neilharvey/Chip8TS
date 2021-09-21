@@ -74,18 +74,18 @@ describe('Opcode', () => {
             ['Annn is LD I, nnn', 0xA22A, 'LD I, 22a'],
             ['Bnnn is JP V0, nnn', 0xB123, 'JP V0, 123'],
             ['Cxkk is RND Vx, kk', 0xC088, 'RND V0 88'],
-            ['Dxyn is DRW Vx, Vy, n', 0xD01F, 'DRW V0, V1, f']
-            //['Ex9E is SKP Vx', 0xE09E, 'SKP V0'],
-            //['ExA1 is SKNP Vx', 0xE1A1, 'SKNP V1'],
-            //['Fx07 is LD Vx, DT', 0xF007, 'LD V0, DT'],
-            //['Fx0A is LD  Vx, K', 0xF00A, 'LD V0, K'],
-            //['Fx15 is LD DT, Vx', 0xF115, 'LD DT, V1'],
-            //['Fx18 is LD ST, Vx', 0xF018, 'LD ST, V0'],
-            //['Fx13 is ADD I, Vx', 0xF013, 'ADD I, V0'],
-            //['Fx29 is LD F, Vx', 0xF029, 'LD F, V0'],
-            //['Fx33 is LD B, Vx', 0xF033, 'LD B, V0'],
-            //['Fx55 is LD [I], Vx', 0xF055, 'LD [I], V0'],
-            //['Fx65 is LD Vx, [I]', 0xF065, 'LD V0 [I]'],
+            ['Dxyn is DRW Vx, Vy, n', 0xD01F, 'DRW V0, V1, f'],
+            ['Ex9E is SKP Vx', 0xE09E, 'SKP V0'],
+            ['ExA1 is SKNP Vx', 0xE1A1, 'SKNP V1'],
+            ['Fx07 is LD Vx, DT', 0xF007, 'LD V0, DT'],
+            ['Fx0A is LD  Vx, K', 0xF00A, 'LD V0, K'],
+            ['Fx15 is LD DT, Vx', 0xF115, 'LD DT, V1'],
+            ['Fx18 is LD ST, Vx', 0xF018, 'LD ST, V0'],
+            ['Fx13 is ADD I, Vx', 0xF01E, 'ADD I, V0'],
+            ['Fx29 is LD F, Vx', 0xF029, 'LD F, V0'],
+            ['Fx33 is LD B, Vx', 0xF033, 'LD B, V0'],
+            ['Fx55 is LD [I], Vx', 0xF055, 'LD [I], V0'],
+            ['Fx65 is LD Vx, [I]', 0xF065, 'LD V0, [I]']
         ];
 
         data.forEach((item) => {
