@@ -65,9 +65,7 @@ export class Opcode {
                         return `SUBN V${this.x}, V${this.y}`;
                     case 0xE:
                         return `SHL V${this.x}, V${this.y}`;
-                    break;
-                }
-
+                    }
                 break;
             case 0x9000:
                 return `SNE V${this.x}, V${this.y}`;
