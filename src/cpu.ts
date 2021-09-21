@@ -59,6 +59,18 @@ export class Cpu {
         this.updateSoundTimer();
     }
 
+    updateDelayTimer() {
+        if (this.delay > 0) {
+            this.delay--;
+        }
+    }
+
+    updateSoundTimer() {
+        if (this.sound > 0) {
+            this.sound--;
+        }
+    }
+
     fetchOpcode(): Opcode {
 
         let msb = this.memory[this.pc++];
@@ -68,32 +80,102 @@ export class Cpu {
 
     executeOpcode(opcode: Opcode) {
 
-        var mask = opcode.value & 0xF000;
+        let mask = opcode.value & 0xF000;
+
+        let vx = this.v[opcode.x];
+        let vy = this.v[opcode.y];
 
         switch (mask) {
             case 0x0000:
-                if (opcode.value == 0x00E0) {
-                    return this.cls();
-                } else if (opcode.value == 0x00EE) {
-                    return this.ret();
-                } else {
-                    return;
+                switch (opcode.kk) {
+                    case 0xE0:
+                        return this.cls();
+                    case 0xEE:
+                        return this.ret();
                 }
+                break;
             case 0x1000:
                 return this.jp(opcode.nnn);
+            case 0x2000:
+                return this.call(opcode.nnn);
+            case 0x3000:
+                return this.se(vx, opcode.kk);
+            case 0x4000:
+                return this.sne(vx, opcode.kk);
+            case 0x5000:
+                return this.se(vx, vy);
             case 0x6000:
                 return this.ld_v(opcode.x, opcode.kk);
             case 0x7000:
                 return this.add_v(opcode.x, opcode.kk);
+            case 0x8000:
+                switch (opcode.n) {
+                    case 0x0:
+                        return this.ld_v(opcode.x, vy);
+                    case 0x1:
+                        return this.or_v(opcode.x, vy);
+                    case 0x2:
+                        return this.and_v(opcode.x, vy);
+                    case 0x3:
+                        return this.xor_v(opcode.x, vy);
+                    case 0x4:
+                        return this.add_v(opcode.x, vy, true);
+                    case 0x5:
+                        return this.sub_v(opcode.x, vy);
+                    case 0x6:
+                        return this.shr_v(opcode.x, vy);
+                    case 0x7:
+                        return this.subn_v(opcode.x, vy);
+                    case 0xE:
+                        return this.shl_v(opcode.x, vy);
+                }
+                break;
+            case 0x9000:
+                return this.sne(vx, vy);
             case 0xA000:
                 return this.ld_i(opcode.nnn);
+            case 0xB000:
+                return this.jp(this.v[0] + opcode.nnn);
+            case 0xC000:
+                return this.rnd(opcode.x, opcode.kk);
             case 0xD000:
                 return this.drw(opcode.x, opcode.y, opcode.n);
-            default:
-                return this.unhandled_opcode(opcode);
+            case 0xE000:
+                switch (opcode.kk) {
+                    case 0x9E:
+                        return this.skp(vx);
+                    case 0xA1:
+                        return this.sknp(vx);
+                }
+                break;
+            case 0xF000:
+                switch (opcode.kk) {
+                    case 0x07:
+                        return this.ld_v(opcode.x, this.delay);
+                    case 0x0A:
+                        return this.ld_v_k(opcode.x);
+                    case 0x15:
+                        return this.ld_dt(vx);
+                    case 0x18:
+                        return this.ld_st(vx);
+                    case 0x1E:
+                        return this.add_i(vx);
+                    case 0x29:
+                        return this.ld_i_spr(opcode.x);
+                    case 0x33:
+                        return this.ld_bcd_v(opcode.x);
+                    case 0x55:
+                        return this.ld_i_v();
+                    case 0x65:
+                        return this.ld_v_i();
+                }
+                break;
         }
 
+        return this.unhandled_opcode(opcode);
     }
+
+    // display
 
     cls() {
 
@@ -104,19 +186,6 @@ export class Cpu {
         }
 
         this.display.render(this.screen);
-    }
-
-    ret() {
-        this.sp--;
-        this.pc = this.s[this.sp];
-    }
-
-    jp(nnn: number) {
-        this.pc = nnn;
-    }
-
-    add_v(x: number, kk: number) {
-        this.v[x] += kk;
     }
 
     drw(x: number, y: number, n: number) {
@@ -153,6 +222,73 @@ export class Cpu {
         this.display.render(this.screen);
     }
 
+    // flow
+
+    call(nnn: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    ret() {
+        this.sp--;
+        this.pc = this.s[this.sp];
+    }
+
+    jp(nnn: number) {
+        this.pc = nnn;
+    }
+
+    // cond
+
+    se(x: number, y: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    sne(x: number, y: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    // math
+
+    add_v(x: number, kk: number, carry: boolean = false) {
+        this.v[x] += kk;
+    }
+
+    sub_v(x: number, kk: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    subn_v(x: number, vy: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    rnd(x: number, kk: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    // bitwise
+
+    and_v(x: number, vy: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    or_v(x: number, vy: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    xor_v(x: number, vy: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    shl_v(x: number, vy: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    shr_v(x: number, vy: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    // memory
+
     ld_i(nnn: number) {
         this.i = nnn;
     }
@@ -161,13 +297,51 @@ export class Cpu {
         this.v[x] = kk;
     }
 
-    updateDelayTimer() {
-        this.delay--;
+    ld_st(kk: number) {
+        throw new Error('Method not implemented.');
     }
 
-    updateSoundTimer() {
-        this.sound--;
+    ld_dt(kk: number) {
+        throw new Error('Method not implemented.');
     }
+
+    ld_bcd_v(x: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    ld_i_spr(x: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    ld_i_addr(kk: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    add_i(kk: number) {
+        throw new Error('Method not implemented.');
+    }    
+
+    ld_v_i() {
+        throw new Error('Method not implemented.');
+    }
+
+    ld_i_v() {
+        throw new Error('Method not implemented.');
+    }
+
+    // keypad
+
+    sknp(k: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    skp(k: number) {
+        throw new Error('Method not implemented.');
+    }
+
+    ld_v_k(x: number) {
+        throw new Error('Method not implemented.');
+    } 
 
     loadFontset() {
 
