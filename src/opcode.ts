@@ -21,6 +21,7 @@ export class Opcode {
     instruction(): string {
 
         let mask = this.value & 0xF000;
+        let addr = this.nnn.toHex(3);
 
         switch (mask) {
             case 0x0000:
@@ -32,9 +33,9 @@ export class Opcode {
                 }
                 break;
             case 0x1000:
-                return `JP ${this.nnn.toHex(3)}`;
+                return `JP ${addr}`;
             case 0x2000:
-                return `CALL ${this.nnn.toHex(3)}`;
+                return `CALL ${addr}`;
             case 0x3000:
                 return `SE V${this.x} ${this.kk.toHex(2)}`;
             case 0x4000:
@@ -70,9 +71,9 @@ export class Opcode {
             case 0x9000:
                 return `SNE V${this.x}, V${this.y}`;
             case 0xA000:
-                return `LD I, ${this.nnn.toHex(3)}`;
+                return `LD I, ${addr}`;
             case 0xB000:
-                return `JP V0, ${this.nnn.toHex(3)}`;
+                return `JP V0, ${addr}`;
             case 0xC000:
                 return `RND V${this.x} ${this.kk.toHex(2)}`;
             case 0xD000:
