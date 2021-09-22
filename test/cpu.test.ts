@@ -58,6 +58,8 @@ describe('CPU', () => {
 
             let cpu = new Cpu();
             cpu.delay = 10;
+            cpu.memory[0x200] = 0x00;
+            cpu.memory[0x201] = 0xE0;
 
             cpu.tick();
 
@@ -68,6 +70,8 @@ describe('CPU', () => {
 
             let cpu = new Cpu();
             cpu.sound = 5;
+            cpu.memory[0x200] = 0x00;
+            cpu.memory[0x201] = 0xE0;
 
             cpu.tick();
 
@@ -102,8 +106,8 @@ describe('CPU', () => {
 
             cpu.cls();
 
-            assert.strictEqual(false, cpu.screen[0][0]);
-            assert.strictEqual(false, cpu.screen[63][31]);
+            assert.strictEqual(cpu.screen[0][0], false);
+            assert.strictEqual(cpu.screen[63][31], false);
         })
     });
 
@@ -114,7 +118,7 @@ describe('CPU', () => {
 
             cpu.jp(0x400);
 
-            assert.strictEqual(0x400, cpu.pc);
+            assert.strictEqual(cpu.pc, 0x400);
         });
     });
 
@@ -130,8 +134,8 @@ describe('CPU', () => {
 
             cpu.ret();
 
-            assert.strictEqual(0x200, cpu.pc);
-            assert.strictEqual(0, cpu.sp);
+            assert.strictEqual(cpu.pc, 0x200);
+            assert.strictEqual(cpu.sp, 0);
         });
     });
 
@@ -142,7 +146,7 @@ describe('CPU', () => {
 
             cpu.ld_v(8, 0x99);
 
-            assert.strictEqual(0x99, cpu.v[8]);
+            assert.strictEqual(cpu.v[8], 0x99);
         });
     });
 
@@ -153,19 +157,81 @@ describe('CPU', () => {
 
             cpu.ld_i(0x456);
 
-            assert.strictEqual(0x456, cpu.i);
+            assert.strictEqual(cpu.i, 0x456);
         })
     });
 
-    describe("#add_v(x,kk)", () => {
+    describe("#se(x,y)", () => {
+        it("skips next instruction if x=y", () => {
+            let cpu = new Cpu();
+            let pc = cpu.pc;
+
+            cpu.se(0x12, 0x12);
+
+            assert.strictEqual(cpu.pc, pc + 2);
+        });
+    });
+
+    describe("#sne(x,y)", () => {
+        it("skips next instruction if x!=y", () => {
+            let cpu = new Cpu();
+            let pc = cpu.pc;
+
+            cpu.sne(0x12, 0x34);
+
+            assert.strictEqual(cpu.pc, pc + 2);
+        })
+    });
+
+    describe("#add(x,kk)", () => {
+
         it("adds kk to v[x]", () => {
 
             let cpu = new Cpu();
             cpu.v[0] = 0x01;
 
-            cpu.add_v(0, 0x01);
+            cpu.add(0, 0x01);
 
-            assert.strictEqual(0x02, cpu.v[0]);
+            assert.strictEqual(cpu.v[0], 0x02);
         });
+
+        it("does not set v[f] when sum > 0xFF", () => {
+
+            let cpu = new Cpu();
+            cpu.v[0] = 0xCC;
+
+            cpu.add(0, 0xCC);
+
+            assert.strictEqual(cpu.v[0], 0x98);
+            assert.strictEqual(cpu.v[0xF], 0);
+        });
+
     });
+
+    describe("#add_v(x,kk)", () => {
+
+        it("adds kk to v[x]", () => {
+
+            let cpu = new Cpu();
+            cpu.v[0] = 0x01;
+
+            cpu.add(0, 0x01);
+
+            assert.strictEqual(cpu.v[0], 0x02);
+            assert.strictEqual(cpu.v[0xF], 0);
+        });
+
+        it("set v[f] to carry", () => {
+
+            let cpu = new Cpu();
+            cpu.v[0] = 0xCC;
+
+            cpu.add_v(0, 0xCC);
+
+            assert.strictEqual(cpu.v[0], 0x99);
+            assert.strictEqual(cpu.v[0xF], 1);
+        });
+
+    });
+
 });

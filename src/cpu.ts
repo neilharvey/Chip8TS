@@ -107,7 +107,7 @@ export class Cpu {
             case 0x6000:
                 return this.ld_v(opcode.x, opcode.kk);
             case 0x7000:
-                return this.add_v(opcode.x, opcode.kk);
+                return this.add(opcode.x, opcode.kk);
             case 0x8000:
                 switch (opcode.n) {
                     case 0x0:
@@ -119,7 +119,7 @@ export class Cpu {
                     case 0x3:
                         return this.xor_v(opcode.x, vy);
                     case 0x4:
-                        return this.add_v(opcode.x, vy, true);
+                        return this.add_v(opcode.x, vy);
                     case 0x5:
                         return this.sub_v(opcode.x, vy);
                     case 0x6:
@@ -240,17 +240,27 @@ export class Cpu {
     // cond
 
     se(x: number, y: number) {
-        throw new Error('Method not implemented.');
+        if (x === y) {
+            this.pc += 2;
+        }
     }
 
     sne(x: number, y: number) {
-        throw new Error('Method not implemented.');
+        if (x !== y) {
+            this.pc += 2;
+        }
     }
 
     // math
 
-    add_v(x: number, kk: number, carry: boolean = false) {
-        this.v[x] += kk;
+    add(x: number, kk: number) {
+        this.v[x] = this.v[x] + kk % 0xFF;
+    }
+
+    add_v(x: number, kk: number) {
+        let value = this.v[x] + kk;
+        this.v[x] = value % 0xFF;
+        this.v[0xf] = value > 0xFF ? 1 : 0;
     }
 
     sub_v(x: number, kk: number) {
@@ -319,7 +329,7 @@ export class Cpu {
 
     add_i(kk: number) {
         throw new Error('Method not implemented.');
-    }    
+    }
 
     ld_v_i() {
         throw new Error('Method not implemented.');
@@ -341,7 +351,7 @@ export class Cpu {
 
     ld_v_k(x: number) {
         throw new Error('Method not implemented.');
-    } 
+    }
 
     loadFontset() {
 
