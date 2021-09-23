@@ -308,7 +308,7 @@ export class Cpu {
     }
 
     ld_st(kk: number) {
-        throw new Error('Method not implemented.');
+        this.sound = kk;
     }
 
     ld_dt(kk: number) {

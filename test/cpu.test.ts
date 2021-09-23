@@ -161,6 +161,16 @@ describe('CPU', () => {
         })
     });
 
+    describe("#ld_st(kk)", () => {
+        it("sets st to kk", () => {
+            let cpu = new Cpu();
+
+            cpu.ld_st(0xF);
+
+            assert.strictEqual(cpu.sound, 0xF);
+        })
+    });
+
     describe("#se(x,y)", () => {
         it("skips next instruction if x=y", () => {
             let cpu = new Cpu();
@@ -221,7 +231,7 @@ describe('CPU', () => {
             assert.strictEqual(cpu.v[0xF], 0);
         });
 
-        it("set v[f] to carry", () => {
+        it("sets v[f] to carry", () => {
 
             let cpu = new Cpu();
             cpu.v[0] = 0xCC;
