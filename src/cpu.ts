@@ -264,7 +264,9 @@ export class Cpu {
     }
 
     sub_v(x: number, kk: number) {
-        throw new Error('Method not implemented.');
+        let value = this.v[x] - kk;
+        this.v[x] = value % 0xFF;
+        this.v[0xf] = value < 0 ? 1 : 0;
     }
 
     subn_v(x: number, vy: number) {
@@ -312,7 +314,7 @@ export class Cpu {
     }
 
     ld_dt(kk: number) {
-        throw new Error('Method not implemented.');
+        this.dt = kk;
     }
 
     ld_bcd_v(x: number) {

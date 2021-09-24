@@ -57,25 +57,25 @@ describe('CPU', () => {
         it("decrements delay timer", () => {
 
             let cpu = new Cpu();
-            cpu.delay = 10;
+            cpu.dt = 10;
             cpu.memory[0x200] = 0x00;
             cpu.memory[0x201] = 0xE0;
 
             cpu.tick();
 
-            assert.strictEqual(9, cpu.delay);
+            assert.strictEqual(9, cpu.dt);
         });
 
         it("decrements sound timer", () => {
 
             let cpu = new Cpu();
-            cpu.sound = 5;
+            cpu.st = 5;
             cpu.memory[0x200] = 0x00;
             cpu.memory[0x201] = 0xE0;
 
             cpu.tick();
 
-            assert.strictEqual(4, cpu.sound);
+            assert.strictEqual(4, cpu.st);
         });
     });
 
@@ -167,8 +167,18 @@ describe('CPU', () => {
 
             cpu.ld_st(0xF);
 
-            assert.strictEqual(cpu.sound, 0xF);
+            assert.strictEqual(cpu.st, 0xF);
         })
+    });
+
+    describe("#ld_dt(kk)", () => {
+        it("sets dt to kk", () => {
+            let cpu = new Cpu();
+
+            cpu.ld_dt(0x8);
+
+            assert.strictEqual(cpu.dt, 0x8);
+        });
     });
 
     describe("#se(x,y)", () => {
@@ -231,7 +241,7 @@ describe('CPU', () => {
             assert.strictEqual(cpu.v[0xF], 0);
         });
 
-        it("sets v[f] to carry", () => {
+        it("sets v[f] to 1 when result is greater than 0xFF", () => {
 
             let cpu = new Cpu();
             cpu.v[0] = 0xCC;
@@ -240,6 +250,30 @@ describe('CPU', () => {
 
             assert.strictEqual(cpu.v[0], 0x99);
             assert.strictEqual(cpu.v[0xF], 1);
+        });
+
+    });
+
+    describe("#sub_v(x,kk)", () => {
+
+        it("subtracts kk from v[x]", () => {
+            let cpu = new Cpu();
+            cpu.v[8] = 0x08;
+
+            cpu.sub_v(8, 0x05);
+
+            assert.strictEqual(cpu.v[8], 0x03);
+            assert.strictEqual(cpu.v[0xf], 0);
+        });
+
+        it("sets v[f] to 1 when result is negative",() => {
+            let cpu = new Cpu();
+            cpu.v[8] = 0x08;
+
+            cpu.sub_v(8, 0x09);
+
+            assert.strictEqual(cpu.v[8], 0xFF);
+            assert.strictEqual(cpu.v[0xf], 1);
         });
 
     });
