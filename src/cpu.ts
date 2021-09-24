@@ -13,8 +13,8 @@ export class Cpu {
     v: Uint8Array = new Uint8Array(8);
     sp: number = 0;
     s: Uint16Array = new Uint16Array(16);
-    delay: number = 0;
-    sound: number = 0;
+    dt: number = 0;
+    st: number = 0;
     screen: boolean[][] = [];
 
     constructor(display: Display = new NullDisplay(), audio: Audio = new NullAudio()) {
@@ -37,8 +37,8 @@ export class Cpu {
         this.v = new Uint8Array(16);
         this.sp = 0;
         this.s = new Uint16Array(16);
-        this.delay = 0;
-        this.sound = 0;
+        this.dt = 0;
+        this.st = 0;
         this.loadFontset();
 
         this.screen = [];
@@ -60,14 +60,14 @@ export class Cpu {
     }
 
     updateDelayTimer() {
-        if (this.delay > 0) {
-            this.delay--;
+        if (this.dt > 0) {
+            this.dt--;
         }
     }
 
     updateSoundTimer() {
-        if (this.sound > 0) {
-            this.sound--;
+        if (this.st > 0) {
+            this.st--;
         }
     }
 
@@ -151,7 +151,7 @@ export class Cpu {
             case 0xF000:
                 switch (opcode.kk) {
                     case 0x07:
-                        return this.ld_v(opcode.x, this.delay);
+                        return this.ld_v(opcode.x, this.dt);
                     case 0x0A:
                         return this.ld_v_k(opcode.x);
                     case 0x15:
@@ -308,7 +308,7 @@ export class Cpu {
     }
 
     ld_st(kk: number) {
-        this.sound = kk;
+        this.st = kk;
     }
 
     ld_dt(kk: number) {
