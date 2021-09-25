@@ -224,8 +224,10 @@ export class Cpu {
 
     // flow
 
-    call(nnn: number) {
-        throw new Error('Method not implemented.');
+    call(addr: number) {
+        this.s[this.sp] = this.pc;
+        this.sp++;
+        this.pc = addr;
     }
 
     ret() {
@@ -233,8 +235,8 @@ export class Cpu {
         this.pc = this.s[this.sp];
     }
 
-    jp(nnn: number) {
-        this.pc = nnn;
+    jp(addr: number) {
+        this.pc = addr;
     }
 
     // cond
@@ -265,12 +267,14 @@ export class Cpu {
 
     sub_v(x: number, kk: number) {
         let value = this.v[x] - kk;
-        this.v[x] = value % 0xFF;
         this.v[0xf] = value < 0 ? 1 : 0;
+        this.v[x] = value % 0xFF;
     }
 
-    subn_v(x: number, vy: number) {
-        throw new Error('Method not implemented.');
+    subn_v(x: number, kk: number) {
+        let value = kk - this.v[x];
+        this.v[0xf] = kk > this.v[x] ? 1 : 0;
+        this.v[x] = value % 0xFF;
     }
 
     rnd(x: number, kk: number) {
@@ -279,23 +283,23 @@ export class Cpu {
 
     // bitwise
 
-    and_v(x: number, vy: number) {
+    and_v(x: number, kk: number) {
         throw new Error('Method not implemented.');
     }
 
-    or_v(x: number, vy: number) {
+    or_v(x: number, kk: number) {
         throw new Error('Method not implemented.');
     }
 
-    xor_v(x: number, vy: number) {
+    xor_v(x: number, kk: number) {
         throw new Error('Method not implemented.');
     }
 
-    shl_v(x: number, vy: number) {
+    shl_v(x: number, kk: number) {
         throw new Error('Method not implemented.');
     }
 
-    shr_v(x: number, vy: number) {
+    shr_v(x: number, kk: number) {
         throw new Error('Method not implemented.');
     }
 

@@ -96,23 +96,22 @@ describe('CPU', () => {
         });
     });
 
-    describe("#cls()", () => {
-        it("clears the display", () => {
 
-            let cpu = new Cpu();
+    describe("#call(addr)", () => {
+      it("pushes pc to stack then sets pc to addr", () => {
 
-            cpu.screen[0][0] = true;
-            cpu.screen[63][31] = true;
+        let cpu = new Cpu();
 
-            cpu.cls();
+        cpu.call(0x234);
 
-            assert.strictEqual(cpu.screen[0][0], false);
-            assert.strictEqual(cpu.screen[63][31], false);
-        })
-    });
+        assert.strictEqual(cpu.sp, 1);
+        assert.strictEqual(cpu.s[0], 0x200);
+        assert.strictEqual(cpu.pc, 0x234);
+      });
+    })
 
-    describe("#jp(nnn)", () => {
-        it("sets pc to nnn", () => {
+    describe("#jp(addr)", () => {
+        it("sets pc to addr", () => {
 
             let cpu = new Cpu();
 
@@ -127,16 +126,28 @@ describe('CPU', () => {
 
             let cpu = new Cpu();
 
-            // CALL 0x400
-            cpu.s[0] = 0x200;
-            cpu.sp = 1;
-            cpu.pc = 0x400;
-
+            cpu.call(0x400);
             cpu.ret();
 
             assert.strictEqual(cpu.pc, 0x200);
             assert.strictEqual(cpu.sp, 0);
         });
+    });
+
+
+    describe("#cls()", () => {
+        it("clears the display", () => {
+
+            let cpu = new Cpu();
+
+            cpu.screen[0][0] = true;
+            cpu.screen[63][31] = true;
+
+            cpu.cls();
+
+            assert.strictEqual(cpu.screen[0][0], false);
+            assert.strictEqual(cpu.screen[63][31], false);
+        })
     });
 
     describe("#ld_v(x,kk)", () => {
@@ -254,7 +265,7 @@ describe('CPU', () => {
 
     });
 
-    describe("#sub_v(x,kk)", () => {
+    describe("#sub_v(x, kk)", () => {
 
         it("subtracts kk from v[x]", () => {
             let cpu = new Cpu();
@@ -275,6 +286,30 @@ describe('CPU', () => {
             assert.strictEqual(cpu.v[8], 0xFF);
             assert.strictEqual(cpu.v[0xf], 1);
         });
+
+    });
+
+    describe("#subn_v(x, kk)", () => {
+
+        it("substracts v[x] from kk and v[f] to 1 when no carry", () => {
+            let cpu = new Cpu();
+            cpu.v[0] = 0xFE;
+
+            cpu.subn_v(0, 0xFF);
+
+            assert.strictEqual(cpu.v[0], 0x01);
+            assert.strictEqual(cpu.v[0xF], 1);
+        });
+
+        it("sets v[f] to 0 when carry", () => {
+            let cpu = new Cpu();
+            cpu.v[0] = 0xFF;
+
+            cpu.subn_v(0, 0xFE);
+
+            assert.strictEqual(cpu.v[0], 0xFF);
+            assert.strictEqual(cpu.v[0xF], 0);
+        })
 
     });
 
