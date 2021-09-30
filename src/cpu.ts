@@ -115,17 +115,17 @@ export class Cpu {
                     case 0x1:
                         return this.or_v(opcode.x, vy);
                     case 0x2:
-                        return this.and_v(opcode.x, vy);
+                        return this.and_v(opcode.x, opcode.y);
                     case 0x3:
                         return this.xor_v(opcode.x, vy);
                     case 0x4:
-                        return this.add_v(opcode.x, vy);
+                        return this.and_v(opcode.x, vy);
                     case 0x5:
-                        return this.sub_v(opcode.x, vy);
+                        return this.sub_v(opcode.x, opcode.y);
                     case 0x6:
                         return this.shr_v(opcode.x, vy);
                     case 0x7:
-                        return this.subn_v(opcode.x, vy);
+                        return this.subn_v(opcode.x, opcode.y);
                     case 0xE:
                         return this.shl_v(opcode.x, vy);
                 }
@@ -265,15 +265,15 @@ export class Cpu {
         this.v[0xf] = value > 0xFF ? 1 : 0;
     }
 
-    sub_v(x: number, kk: number) {
-        let value = this.v[x] - kk;
+    sub_v(x: number, y: number) {
+        let value = this.v[x] - this.v[y];
         this.v[0xf] = value < 0 ? 1 : 0;
         this.v[x] = value % 0xFF;
     }
 
-    subn_v(x: number, kk: number) {
-        let value = kk - this.v[x];
-        this.v[0xf] = kk > this.v[x] ? 1 : 0;
+    subn_v(x: number, y: number) {
+        let value = this.v[y] - this.v[x];
+        this.v[0xf] = this.v[y] > this.v[x] ? 1 : 0;
         this.v[x] = value % 0xFF;
     }
 
@@ -283,8 +283,9 @@ export class Cpu {
 
     // bitwise
 
-    and_v(x: number, kk: number) {
-        throw new Error('Method not implemented.');
+    and_v(x: number, y: number) {
+        let value = this.v[x] & this.v[y];
+        this.v[x] = value;
     }
 
     or_v(x: number, kk: number) {

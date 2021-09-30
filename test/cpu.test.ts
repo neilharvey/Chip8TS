@@ -98,16 +98,16 @@ describe('CPU', () => {
 
 
     describe("#call(addr)", () => {
-      it("pushes pc to stack then sets pc to addr", () => {
+        it("pushes pc to stack then sets pc to addr", () => {
 
-        let cpu = new Cpu();
+            let cpu = new Cpu();
 
-        cpu.call(0x234);
+            cpu.call(0x234);
 
-        assert.strictEqual(cpu.sp, 1);
-        assert.strictEqual(cpu.s[0], 0x200);
-        assert.strictEqual(cpu.pc, 0x234);
-      });
+            assert.strictEqual(cpu.sp, 1);
+            assert.strictEqual(cpu.s[0], 0x200);
+            assert.strictEqual(cpu.pc, 0x234);
+        });
     })
 
     describe("#jp(addr)", () => {
@@ -239,14 +239,14 @@ describe('CPU', () => {
 
     });
 
-    describe("#add_v(x,kk)", () => {
+    describe("#add_v(x, kk)", () => {
 
         it("adds kk to v[x]", () => {
 
             let cpu = new Cpu();
             cpu.v[0] = 0x01;
 
-            cpu.add(0, 0x01);
+            cpu.add_v(0, 0x01);
 
             assert.strictEqual(cpu.v[0], 0x02);
             assert.strictEqual(cpu.v[0xF], 0);
@@ -258,30 +258,31 @@ describe('CPU', () => {
             cpu.v[0] = 0xCC;
 
             cpu.add_v(0, 0xCC);
-
             assert.strictEqual(cpu.v[0], 0x99);
             assert.strictEqual(cpu.v[0xF], 1);
         });
 
     });
 
-    describe("#sub_v(x, kk)", () => {
+    describe("#sub_v(x, y)", () => {
 
-        it("subtracts kk from v[x]", () => {
+        it("subtracts v[y] from v[x]", () => {
             let cpu = new Cpu();
             cpu.v[8] = 0x08;
+            cpu.v[9] = 0x05;
 
-            cpu.sub_v(8, 0x05);
+            cpu.sub_v(8, 9);
 
             assert.strictEqual(cpu.v[8], 0x03);
             assert.strictEqual(cpu.v[0xf], 0);
         });
 
-        it("sets v[f] to 1 when result is negative",() => {
+        it("sets v[f] to 1 when result is negative", () => {
             let cpu = new Cpu();
             cpu.v[8] = 0x08;
+            cpu.v[9] = 0x09;
 
-            cpu.sub_v(8, 0x09);
+            cpu.sub_v(8, 9);
 
             assert.strictEqual(cpu.v[8], 0xFF);
             assert.strictEqual(cpu.v[0xf], 1);
@@ -289,13 +290,14 @@ describe('CPU', () => {
 
     });
 
-    describe("#subn_v(x, kk)", () => {
+    describe("#subn_v(x, y)", () => {
 
-        it("substracts v[x] from kk and v[f] to 1 when no carry", () => {
+        it("substracts v[x] from v[y] and v[f] to 1 when no carry", () => {
             let cpu = new Cpu();
             cpu.v[0] = 0xFE;
+            cpu.v[1] = 0xFF;
 
-            cpu.subn_v(0, 0xFF);
+            cpu.subn_v(0, 1);
 
             assert.strictEqual(cpu.v[0], 0x01);
             assert.strictEqual(cpu.v[0xF], 1);
@@ -304,12 +306,30 @@ describe('CPU', () => {
         it("sets v[f] to 0 when carry", () => {
             let cpu = new Cpu();
             cpu.v[0] = 0xFF;
+            cpu.v[1] = 0xFE
 
-            cpu.subn_v(0, 0xFE);
+            cpu.subn_v(0, 1);
 
             assert.strictEqual(cpu.v[0], 0xFF);
             assert.strictEqual(cpu.v[0xF], 0);
-        })
+        });
+
+    });
+
+    describe("#and_v(x, y)", () => {
+
+        it("sets v[x] to bitwise AND of v[x] and v[y]", () => {
+
+            let cpu = new Cpu();
+            cpu.v[0] = 0b1111_0000;
+            cpu.v[1] = 0b0011_0011;
+            let expt = 0b0011_0000;
+
+            cpu.and_v(0, 1);
+            
+            assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
+
+        });
 
     });
 
