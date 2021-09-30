@@ -61,11 +61,11 @@ export class Opcode {
                     case 0x5:
                         return `SUB V${this.x}, V${this.y}`;
                     case 0x6:
-                        return `SHR V${this.x}, V${this.y}`;
+                        return `SHR V${this.x}`;
                     case 0x7:
                         return `SUBN V${this.x}, V${this.y}`;
                     case 0xE:
-                        return `SHL V${this.x}, V${this.y}`;
+                        return `SHL V${this.x}`;
                     }
                 break;
             case 0x9000:
