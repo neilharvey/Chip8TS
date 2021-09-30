@@ -239,14 +239,15 @@ describe('CPU', () => {
 
     });
 
-    describe("#add_v(x, kk)", () => {
+    describe("#add_v(x, y)", () => {
 
-        it("adds kk to v[x]", () => {
+        it("adds v[y] to v[x]", () => {
 
             let cpu = new Cpu();
             cpu.v[0] = 0x01;
+            cpu.v[1] = 0x01;
 
-            cpu.add_v(0, 0x01);
+            cpu.add_v(0, 1);
 
             assert.strictEqual(cpu.v[0], 0x02);
             assert.strictEqual(cpu.v[0xF], 0);
@@ -256,8 +257,9 @@ describe('CPU', () => {
 
             let cpu = new Cpu();
             cpu.v[0] = 0xCC;
+            cpu.v[1] = 0xCC;
 
-            cpu.add_v(0, 0xCC);
+            cpu.add_v(0, 1);
             assert.strictEqual(cpu.v[0], 0x99);
             assert.strictEqual(cpu.v[0xF], 1);
         });

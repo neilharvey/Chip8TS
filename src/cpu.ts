@@ -113,21 +113,21 @@ export class Cpu {
                     case 0x0:
                         return this.ld_v(opcode.x, vy);
                     case 0x1:
-                        return this.or_v(opcode.x, vy);
+                        return this.or_v(opcode.x, opcode.y);
                     case 0x2:
                         return this.and_v(opcode.x, opcode.y);
                     case 0x3:
-                        return this.xor_v(opcode.x, vy);
+                        return this.xor_v(opcode.x,  opcode.y);
                     case 0x4:
-                        return this.and_v(opcode.x, vy);
+                        return this.add_v(opcode.x, opcode.y);
                     case 0x5:
                         return this.sub_v(opcode.x, opcode.y);
                     case 0x6:
-                        return this.shr_v(opcode.x, vy);
+                        return this.shr_v(opcode.x);
                     case 0x7:
                         return this.subn_v(opcode.x, opcode.y);
                     case 0xE:
-                        return this.shl_v(opcode.x, vy);
+                        return this.shl_v(opcode.x);
                 }
                 break;
             case 0x9000:
@@ -259,8 +259,8 @@ export class Cpu {
         this.v[x] = this.v[x] + kk % 0xFF;
     }
 
-    add_v(x: number, kk: number) {
-        let value = this.v[x] + kk;
+    add_v(x: number, y: number) {
+        let value = this.v[x] + this.v[y];
         this.v[x] = value % 0xFF;
         this.v[0xf] = value > 0xFF ? 1 : 0;
     }
@@ -288,19 +288,19 @@ export class Cpu {
         this.v[x] = value;
     }
 
-    or_v(x: number, kk: number) {
+    or_v(x: number, y: number) {
         throw new Error('Method not implemented.');
     }
 
-    xor_v(x: number, kk: number) {
+    xor_v(x: number, y: number) {
         throw new Error('Method not implemented.');
     }
 
-    shl_v(x: number, kk: number) {
+    shl_v(x: number) {
         throw new Error('Method not implemented.');
     }
 
-    shr_v(x: number, kk: number) {
+    shr_v(x: number) {
         throw new Error('Method not implemented.');
     }
 
