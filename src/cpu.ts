@@ -284,16 +284,15 @@ export class Cpu {
     // bitwise
 
     and_v(x: number, y: number) {
-        let value = this.v[x] & this.v[y];
-        this.v[x] = value;
+        this.v[x] = this.v[x] & this.v[y]; 
     }
 
     or_v(x: number, y: number) {
-        throw new Error('Method not implemented.');
+        this.v[x] = this.v[x] | this.v[y];
     }
 
     xor_v(x: number, y: number) {
-        throw new Error('Method not implemented.');
+        this.v[x] = this.v[x] ^ this.v[y];
     }
 
     shl_v(x: number) {

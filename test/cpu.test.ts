@@ -319,7 +319,6 @@ describe('CPU', () => {
     });
 
     describe("#and_v(x, y)", () => {
-
         it("sets v[x] to bitwise AND of v[x] and v[y]", () => {
 
             let cpu = new Cpu();
@@ -332,7 +331,36 @@ describe('CPU', () => {
             assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
 
         });
-
     });
+
+    describe("#or_v(x,y)", () => {
+        it("sets v[x] to bitwise OR of v[x] and v[y]", () => {
+
+            let cpu = new Cpu();
+            cpu.v[0] = 0b1111_0000;
+            cpu.v[1] = 0b0011_0011;
+            let expt = 0b1111_0011;
+
+            cpu.or_v(0, 1);
+            
+            assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
+
+        });
+    });
+
+    describe("#or_v(x,y)", () => {
+        it("sets v[x] to bitwise OR of v[x] and v[y]", () => {
+
+            let cpu = new Cpu();
+            cpu.v[0] = 0b1111_0000;
+            cpu.v[1] = 0b0011_0011;
+            let expt = 0b1100_0011;
+
+            cpu.xor_v(0, 1);
+            
+            assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
+
+        });
+    })    
 
 });
