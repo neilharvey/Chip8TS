@@ -327,7 +327,7 @@ describe('CPU', () => {
             let expt = 0b0011_0000;
 
             cpu.and_v(0, 1);
-            
+
             assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
 
         });
@@ -342,9 +342,8 @@ describe('CPU', () => {
             let expt = 0b1111_0011;
 
             cpu.or_v(0, 1);
-            
-            assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
 
+            assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
         });
     });
 
@@ -357,10 +356,53 @@ describe('CPU', () => {
             let expt = 0b1100_0011;
 
             cpu.xor_v(0, 1);
-            
-            assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
 
+            assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
         });
-    })    
+    });
+
+    describe("#shl_v(x)", () => {
+        it("shifts v[x] left one bit", () => {
+            let cpu = new Cpu();
+            cpu.v[0] = 1;
+
+            cpu.shl_v(0);
+
+            assert.strictEqual(cpu.v[0], 2);
+            assert.strictEqual(cpu.v[0xF], 0);
+        });
+
+        it("sets v[f] to 1 when msb is 1", () => {
+            let cpu = new Cpu();
+            cpu.v[0] = 0b1000_0000;
+
+            cpu.shl_v(0);
+
+            assert.strictEqual(cpu.v[0], 0);
+            assert.strictEqual(cpu.v[0xF], 1);            
+        })
+    });
+   
+   describe("#shl_v(x)", () => {
+        it("shifts v[x] right one bit", () => {
+            let cpu = new Cpu();
+            cpu.v[0] = 4;
+
+            cpu.shr_v(0);
+
+            assert.strictEqual(cpu.v[0], 2);
+            assert.strictEqual(cpu.v[0xf], 0);
+        })
+
+        it("sets v[f] to 1 when lsb is 1", () => {
+            let cpu = new Cpu();
+            cpu.v[0] = 5; // 0b0000_0101
+
+            cpu.shr_v(0);
+
+            assert.strictEqual(cpu.v[0], 2);
+            assert.strictEqual(cpu.v[0xf], 1);
+        });
+   });
 
 });

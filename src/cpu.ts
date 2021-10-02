@@ -296,11 +296,13 @@ export class Cpu {
     }
 
     shl_v(x: number) {
-        throw new Error('Method not implemented.');
+        this.v[0xf] = this.v[x] >> 7;
+        this.v[x] = this.v[x] << 1;
     }
 
     shr_v(x: number) {
-        throw new Error('Method not implemented.');
+        this.v[0xf] = this.v[x] & 0x01;
+        this.v[x] = this.v[x] >> 1;
     }
 
     // memory
