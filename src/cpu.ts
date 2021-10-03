@@ -107,27 +107,27 @@ export class Cpu {
             case 0x6000:
                 return this.ld_v(opcode.x, opcode.kk);
             case 0x7000:
-                return this.add(opcode.x, opcode.kk);
+                return this.add_v(opcode.x, opcode.kk);
             case 0x8000:
                 switch (opcode.n) {
                     case 0x0:
                         return this.ld_v(opcode.x, vy);
                     case 0x1:
-                        return this.or_v(opcode.x, opcode.y);
+                        return this.or(opcode.x, opcode.y);
                     case 0x2:
-                        return this.and_v(opcode.x, opcode.y);
+                        return this.and(opcode.x, opcode.y);
                     case 0x3:
-                        return this.xor_v(opcode.x,  opcode.y);
+                        return this.xor(opcode.x,  opcode.y);
                     case 0x4:
-                        return this.add_v(opcode.x, opcode.y);
+                        return this.add(opcode.x, opcode.y);
                     case 0x5:
-                        return this.sub_v(opcode.x, opcode.y);
+                        return this.sub(opcode.x, opcode.y);
                     case 0x6:
-                        return this.shr_v(opcode.x);
+                        return this.shr(opcode.x);
                     case 0x7:
-                        return this.subn_v(opcode.x, opcode.y);
+                        return this.subn(opcode.x, opcode.y);
                     case 0xE:
-                        return this.shl_v(opcode.x);
+                        return this.shl(opcode.x);
                 }
                 break;
             case 0x9000:
@@ -255,23 +255,23 @@ export class Cpu {
 
     // math
 
-    add(x: number, kk: number) {
+    add_v(x: number, kk: number) {
         this.v[x] = this.v[x] + kk % 0xFF;
     }
 
-    add_v(x: number, y: number) {
+    add(x: number, y: number) {
         let value = this.v[x] + this.v[y];
         this.v[x] = value % 0xFF;
         this.v[0xf] = value > 0xFF ? 1 : 0;
     }
 
-    sub_v(x: number, y: number) {
+    sub(x: number, y: number) {
         let value = this.v[x] - this.v[y];
         this.v[0xf] = value < 0 ? 1 : 0;
         this.v[x] = value % 0xFF;
     }
 
-    subn_v(x: number, y: number) {
+    subn(x: number, y: number) {
         let value = this.v[y] - this.v[x];
         this.v[0xf] = this.v[y] > this.v[x] ? 1 : 0;
         this.v[x] = value % 0xFF;
@@ -283,24 +283,24 @@ export class Cpu {
 
     // bitwise
 
-    and_v(x: number, y: number) {
+    and(x: number, y: number) {
         this.v[x] = this.v[x] & this.v[y]; 
     }
 
-    or_v(x: number, y: number) {
+    or(x: number, y: number) {
         this.v[x] = this.v[x] | this.v[y];
     }
 
-    xor_v(x: number, y: number) {
+    xor(x: number, y: number) {
         this.v[x] = this.v[x] ^ this.v[y];
     }
 
-    shl_v(x: number) {
+    shl(x: number) {
         this.v[0xf] = this.v[x] >> 7;
         this.v[x] = this.v[x] << 1;
     }
 
-    shr_v(x: number) {
+    shr(x: number) {
         this.v[0xf] = this.v[x] & 0x01;
         this.v[x] = this.v[x] >> 1;
     }

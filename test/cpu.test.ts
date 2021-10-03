@@ -214,14 +214,14 @@ describe('CPU', () => {
         })
     });
 
-    describe("#add(x,kk)", () => {
+    describe("#add_V(x,kk)", () => {
 
         it("adds kk to v[x]", () => {
 
             let cpu = new Cpu();
             cpu.v[0] = 0x01;
 
-            cpu.add(0, 0x01);
+            cpu.add_v(0, 0x01);
 
             assert.strictEqual(cpu.v[0], 0x02);
         });
@@ -231,7 +231,7 @@ describe('CPU', () => {
             let cpu = new Cpu();
             cpu.v[0] = 0xCC;
 
-            cpu.add(0, 0xCC);
+            cpu.add_v(0, 0xCC);
 
             assert.strictEqual(cpu.v[0], 0x98);
             assert.strictEqual(cpu.v[0xF], 0);
@@ -239,7 +239,7 @@ describe('CPU', () => {
 
     });
 
-    describe("#add_v(x, y)", () => {
+    describe("#add(x, y)", () => {
 
         it("adds v[y] to v[x]", () => {
 
@@ -247,7 +247,7 @@ describe('CPU', () => {
             cpu.v[0] = 0x01;
             cpu.v[1] = 0x01;
 
-            cpu.add_v(0, 1);
+            cpu.add(0, 1);
 
             assert.strictEqual(cpu.v[0], 0x02);
             assert.strictEqual(cpu.v[0xF], 0);
@@ -259,21 +259,21 @@ describe('CPU', () => {
             cpu.v[0] = 0xCC;
             cpu.v[1] = 0xCC;
 
-            cpu.add_v(0, 1);
+            cpu.add(0, 1);
             assert.strictEqual(cpu.v[0], 0x99);
             assert.strictEqual(cpu.v[0xF], 1);
         });
 
     });
 
-    describe("#sub_v(x, y)", () => {
+    describe("#sub(x, y)", () => {
 
         it("subtracts v[y] from v[x]", () => {
             let cpu = new Cpu();
             cpu.v[8] = 0x08;
             cpu.v[9] = 0x05;
 
-            cpu.sub_v(8, 9);
+            cpu.sub(8, 9);
 
             assert.strictEqual(cpu.v[8], 0x03);
             assert.strictEqual(cpu.v[0xf], 0);
@@ -284,7 +284,7 @@ describe('CPU', () => {
             cpu.v[8] = 0x08;
             cpu.v[9] = 0x09;
 
-            cpu.sub_v(8, 9);
+            cpu.sub(8, 9);
 
             assert.strictEqual(cpu.v[8], 0xFF);
             assert.strictEqual(cpu.v[0xf], 1);
@@ -292,14 +292,14 @@ describe('CPU', () => {
 
     });
 
-    describe("#subn_v(x, y)", () => {
+    describe("#subn(x, y)", () => {
 
         it("substracts v[x] from v[y] and v[f] to 1 when no carry", () => {
             let cpu = new Cpu();
             cpu.v[0] = 0xFE;
             cpu.v[1] = 0xFF;
 
-            cpu.subn_v(0, 1);
+            cpu.subn(0, 1);
 
             assert.strictEqual(cpu.v[0], 0x01);
             assert.strictEqual(cpu.v[0xF], 1);
@@ -310,7 +310,7 @@ describe('CPU', () => {
             cpu.v[0] = 0xFF;
             cpu.v[1] = 0xFE
 
-            cpu.subn_v(0, 1);
+            cpu.subn(0, 1);
 
             assert.strictEqual(cpu.v[0], 0xFF);
             assert.strictEqual(cpu.v[0xF], 0);
@@ -318,7 +318,7 @@ describe('CPU', () => {
 
     });
 
-    describe("#and_v(x, y)", () => {
+    describe("#and(x, y)", () => {
         it("sets v[x] to bitwise AND of v[x] and v[y]", () => {
 
             let cpu = new Cpu();
@@ -326,14 +326,14 @@ describe('CPU', () => {
             cpu.v[1] = 0b0011_0011;
             let expt = 0b0011_0000;
 
-            cpu.and_v(0, 1);
+            cpu.and(0, 1);
 
             assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
 
         });
     });
 
-    describe("#or_v(x,y)", () => {
+    describe("#or(x,y)", () => {
         it("sets v[x] to bitwise OR of v[x] and v[y]", () => {
 
             let cpu = new Cpu();
@@ -341,32 +341,32 @@ describe('CPU', () => {
             cpu.v[1] = 0b0011_0011;
             let expt = 0b1111_0011;
 
-            cpu.or_v(0, 1);
+            cpu.or(0, 1);
 
             assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
         });
     });
 
-    describe("#or_v(x,y)", () => {
-        it("sets v[x] to bitwise OR of v[x] and v[y]", () => {
+    describe("#xor(x,y)", () => {
+        it("sets v[x] to bitwise XOR of v[x] and v[y]", () => {
 
             let cpu = new Cpu();
             cpu.v[0] = 0b1111_0000;
             cpu.v[1] = 0b0011_0011;
             let expt = 0b1100_0011;
 
-            cpu.xor_v(0, 1);
+            cpu.xor(0, 1);
 
             assert.strictEqual(cpu.v[0].toString(2), expt.toString(2));
         });
     });
 
-    describe("#shl_v(x)", () => {
+    describe("#shl(x)", () => {
         it("shifts v[x] left one bit", () => {
             let cpu = new Cpu();
             cpu.v[0] = 1;
 
-            cpu.shl_v(0);
+            cpu.shl(0);
 
             assert.strictEqual(cpu.v[0], 2);
             assert.strictEqual(cpu.v[0xF], 0);
@@ -376,19 +376,19 @@ describe('CPU', () => {
             let cpu = new Cpu();
             cpu.v[0] = 0b1000_0000;
 
-            cpu.shl_v(0);
+            cpu.shl(0);
 
             assert.strictEqual(cpu.v[0], 0);
             assert.strictEqual(cpu.v[0xF], 1);            
         })
     });
    
-   describe("#shl_v(x)", () => {
+   describe("#shr(x)", () => {
         it("shifts v[x] right one bit", () => {
             let cpu = new Cpu();
             cpu.v[0] = 4;
 
-            cpu.shr_v(0);
+            cpu.shr(0);
 
             assert.strictEqual(cpu.v[0], 2);
             assert.strictEqual(cpu.v[0xf], 0);
@@ -398,7 +398,7 @@ describe('CPU', () => {
             let cpu = new Cpu();
             cpu.v[0] = 5; // 0b0000_0101
 
-            cpu.shr_v(0);
+            cpu.shr(0);
 
             assert.strictEqual(cpu.v[0], 2);
             assert.strictEqual(cpu.v[0xf], 1);
