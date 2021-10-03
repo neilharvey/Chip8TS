@@ -379,11 +379,11 @@ describe('CPU', () => {
             cpu.shl(0);
 
             assert.strictEqual(cpu.v[0], 0);
-            assert.strictEqual(cpu.v[0xF], 1);            
+            assert.strictEqual(cpu.v[0xF], 1);
         })
     });
-   
-   describe("#shr(x)", () => {
+
+    describe("#shr(x)", () => {
         it("shifts v[x] right one bit", () => {
             let cpu = new Cpu();
             cpu.v[0] = 4;
@@ -403,6 +403,29 @@ describe('CPU', () => {
             assert.strictEqual(cpu.v[0], 2);
             assert.strictEqual(cpu.v[0xf], 1);
         });
-   });
+    });
+
+    describe("#rnd(x,kk)", () => {
+        it("sets v[x] to random number in range [0,255]", () => {
+            let cpu = new Cpu();
+            let values: Number[] = [];
+
+            for (var i = 0; i < 10; i++) {
+                cpu.rnd(0, 1);
+                values.push(cpu.v[0]);
+            }
+
+            const allEqual = (arr: Number[]) => arr.every(v => v === arr[0]);
+            assert.strictEqual(allEqual(values), false);
+        });
+
+        it("sets v[x] to bitwise AND of generated value", () => {
+            let cpu = new Cpu();
+            
+            cpu.rnd(0, 0);
+
+            assert.strictEqual(cpu.v[0], 0);
+        });
+    });
 
 });

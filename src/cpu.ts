@@ -278,7 +278,10 @@ export class Cpu {
     }
 
     rnd(x: number, kk: number) {
-        throw new Error('Method not implemented.');
+        // Math.random is in range [0,1) so ceil the
+        // result to generate a value in range [0,255]
+        let value = Math.ceil(255 * Math.random());
+        this.v[x] = value & kk;
     }
 
     // bitwise
