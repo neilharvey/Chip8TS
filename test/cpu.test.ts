@@ -428,4 +428,16 @@ describe('CPU', () => {
         });
     });
 
+    describe("#add_i(x)", () => {
+        it("sets i to i + v[x]", () => {
+            let cpu = new Cpu();
+            cpu.i = 0x400;
+            cpu.v[0] = 0x50;
+
+            cpu.add_i(0);
+
+            assert.strictEqual(cpu.i, 0x450);
+        });
+    });
+
 });

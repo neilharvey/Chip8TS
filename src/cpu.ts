@@ -159,7 +159,7 @@ export class Cpu {
                     case 0x18:
                         return this.ld_st(vx);
                     case 0x1E:
-                        return this.add_i(vx);
+                        return this.add_i(opcode.x);
                     case 0x29:
                         return this.ld_i_spr(opcode.x);
                     case 0x33:
@@ -338,8 +338,8 @@ export class Cpu {
         throw new Error('Method not implemented.');
     }
 
-    add_i(kk: number) {
-        throw new Error('Method not implemented.');
+    add_i(x: number) {
+        this.i = this.i + this.v[x];
     }
 
     ld_v_i() {
