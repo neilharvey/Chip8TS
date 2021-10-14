@@ -334,10 +334,6 @@ export class Cpu {
         throw new Error('Method not implemented.');
     }
 
-    ld_i_addr(kk: number) {
-        throw new Error('Method not implemented.');
-    }
-
     add_i(x: number) {
         this.i = this.i + this.v[x];
     }
